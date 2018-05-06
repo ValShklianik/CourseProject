@@ -1,0 +1,15 @@
+c:\users\valsh_000\source\repos\CourseProjecct\UI\bin\Debug\UI.exe.config
+c:\users\valsh_000\source\repos\CourseProjecct\UI\bin\Debug\UI.exe
+c:\users\valsh_000\source\repos\CourseProjecct\UI\bin\Debug\UI.pdb
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.csprojResolveAssemblyReference.cache
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\MainWindow.g.cs
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\App.g.cs
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI_MarkupCompile.cache
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI_MarkupCompile.lref
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\MainWindow.baml
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.g.resources
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.Properties.Resources.resources
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.csproj.GenerateResource.Cache
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.csproj.CoreCompileInputs.cache
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.exe
+c:\users\valsh_000\source\repos\CourseProjecct\UI\obj\Debug\UI.pdb

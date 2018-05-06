@@ -1,0 +1,9 @@
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\bin\Debug\netstandard2.0\VigenereCipher.deps.json
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\bin\Debug\netstandard2.0\VigenereCipher.dll
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\bin\Debug\netstandard2.0\VigenereCipher.pdb
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.csprojResolveAssemblyReference.cache
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.csproj.CoreCompileInputs.cache
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.AssemblyInfoInputs.cache
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.AssemblyInfo.cs
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.dll
+c:\users\valsh_000\source\repos\CourseProjecct\VigenereCipher\obj\Debug\netstandard2.0\VigenereCipher.pdb
