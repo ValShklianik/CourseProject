@@ -25,6 +25,20 @@ namespace VigenereCipher
             return distances;
         }
 
+        private IEnumerable<int> GetDivisors(int number)
+        {
+            for (int i = 2; i < Math.Sqrt(number); i++)
+            {
+                if (number % i == 0)
+                {
+                    yield return number / i;
+                    yield return i;
+                }
+            }
+            int sqrt = (int)Math.Sqrt(number);
+            if (number % sqrt == 0) yield return sqrt;
+        }
+
         private int NOD(int firstEl, int secondEl)
         {
             while (firstEl != secondEl)
@@ -41,15 +55,22 @@ namespace VigenereCipher
             return firstEl;
         }
 
-        public Dictionary<string, List<int>> Decode(string text)
+        public IEnumerable<ValueTuple<int, int, double>> Decode(string text)
         {
             const int minWordLength = 3,
                       maxWordLength = 15;
-
-            return Enumerable
+            var divisors = Enumerable
                     .Range(minWordLength, maxWordLength - minWordLength)
-                    .SelectMany(len => GetCoordinatesDict(text, len).Where(pair => pair.Value.Count > 1))
-                    .ToDictionary(pair => pair.Key, pair => pair.Value);
+                    .SelectMany(len => GetCoordinatesDict(text, len).Where(pair => pair.Value.Count > 0 && pair.Value.Count(d => d == pair.Value.First()) == pair.Value.Count))
+                    .SelectMany(pair => pair.Value)
+                    .Distinct()
+                    .SelectMany(distance => GetDivisors(distance))
+                    .Where(divisor => divisor >= minWordLength && divisor <= maxWordLength);
+            var pairs = divisors
+                .Select(divisor => (divisor: divisor, count: divisors.Count(d => d == divisor)))
+                .Distinct()
+                .OrderBy(tpl => -tpl.count);
+                return pairs.Select(tpl => (divisor: tpl.divisor, count: tpl.count, probability: (double)tpl.count / pairs.ToList().Count));
         }
     }
 }

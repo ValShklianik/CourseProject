@@ -186,11 +186,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "c:\\users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\VigenereCipher.csproj",
+      "projectUniqueName": "C:\\Users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\VigenereCipher.csproj",
       "projectName": "VigenereCipher",
-      "projectPath": "c:\\users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\VigenereCipher.csproj",
+      "projectPath": "C:\\Users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\VigenereCipher.csproj",
       "packagesPath": "C:\\Users\\valsh_000\\.nuget\\packages\\",
-      "outputPath": "c:\\users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\obj\\",
+      "outputPath": "C:\\Users\\valsh_000\\source\\repos\\CourseProjecct\\VigenereCipher\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
