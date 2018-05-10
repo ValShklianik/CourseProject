@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace VigenereCipher
 {
     public class Cipher
     {
-        string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private int alphabetSize;
         private char[] characters;
 
-        public Cipher()
+        public Cipher(char[] alphabet)
         {
-            characters = alphabet.ToCharArray();
+            characters = alphabet;
             alphabetSize = characters.Length;
         }
 
         private string Code(string input, string keyword, Func<char, char, char> resultSelector)
         {
-            string inputText = input.Replace(" ", "");
+            string inputText = Regex.Replace(input.ToUpper(), "[^" + new String(characters) + "]", "");
             int repeatCount = inputText.Length / keyword.Length + 1;
             string ciph = string.Join("", string.Join("", Enumerable.Repeat(keyword.ToUpper(), repeatCount)).Take(inputText.Length));
 

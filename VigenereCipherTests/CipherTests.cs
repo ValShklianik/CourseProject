@@ -10,7 +10,7 @@ namespace VigenereCipherTests
         [Test]
         public void TestEncode()
         {
-            Cipher cipher = new Cipher();
+            Cipher cipher = new Cipher("ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray());
             string check = cipher.Encode("Lera is beautiful", "nikita");
 
             Assert.AreEqual("ymbibsomkcmiscv".ToUpper(), check);

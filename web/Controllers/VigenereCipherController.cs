@@ -9,20 +9,34 @@ using VigenereCipher;
 
 namespace web.Controllers
 {
-    [RoutePrefix("api/vigenre")]
+    [RoutePrefix("api/vigenere")]
     public class VigenereCipherController : ApiController
     {
+        private const string englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string russianAlphabed = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        private const string en = "en";
+        private const string ru = "ru";
+        private Dictionary<string, string> alphabets;
+
+        VigenereCipherController() {
+            alphabets = new Dictionary<string, string>()
+            {
+                { "en", englishAlphabet},
+                { "ru", russianAlphabed}
+            };
+        }
+
         [Route("encode"), HttpGet]
-        public string EncodeText([FromUri] string keyword, [FromUri] string text)
+        public string EncodeText([FromUri] string keyword, [FromUri] string text, [FromUri] string lang = en)
         {
-            Cipher cipher = new Cipher();
+            Cipher cipher = new Cipher(alphabets[lang].ToCharArray());
             return cipher.Encode(text, keyword);
         }
 
         [Route("decode"), HttpGet]
-        public string DecodeText([FromUri] string keyword, [FromUri] string text)
+        public string DecodeText([FromUri] string keyword, [FromUri] string text, [FromUri] string lang = en)
         {
-            Cipher cipher = new Cipher();
+            Cipher cipher = new Cipher(alphabets[lang].ToCharArray());
             return cipher.Decode(text, keyword);
         }
 

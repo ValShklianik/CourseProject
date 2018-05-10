@@ -61,7 +61,7 @@ namespace VigenereCipher
                       maxWordLength = 15;
             var divisors = Enumerable
                     .Range(minWordLength, maxWordLength - minWordLength)
-                    .SelectMany(len => GetCoordinatesDict(text, len).Where(pair => pair.Value.Count > 0 && pair.Value.Count(d => d == pair.Value.First()) == pair.Value.Count))
+                    .SelectMany(len => GetCoordinatesDict(text.Replace(" ", ""), len).Where(pair => pair.Value.Count > 0 && pair.Value.Count(d => d == pair.Value.First()) == pair.Value.Count))
                     .SelectMany(pair => pair.Value)
                     .Distinct()
                     .SelectMany(distance => GetDivisors(distance))
