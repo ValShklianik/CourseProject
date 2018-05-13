@@ -9,42 +9,49 @@ using VigenereCipher;
 
 namespace web.Controllers
 {
+    public class VigenereParams
+    {
+        private const string englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string alphabet;
+        public string Text { get; set; }
+        public string Keyword { get; set; }
+        public string Alphabet
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(alphabet)) return englishAlphabet;
+                return alphabet;
+            }
+            set
+            {
+                alphabet = value;
+            }
+        }
+    }
+
+
     [RoutePrefix("api/vigenere")]
     public class VigenereCipherController : ApiController
     {
-        private const string englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private const string russianAlphabed = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-        private const string en = "en";
-        private const string ru = "ru";
-        private Dictionary<string, string> alphabets;
-
-        VigenereCipherController() {
-            alphabets = new Dictionary<string, string>()
-            {
-                { "en", englishAlphabet},
-                { "ru", russianAlphabed}
-            };
+        [Route("encode"), HttpPost]
+        public string EncodeText([FromBody] VigenereParams args)
+        {
+            Cipher cipher = new Cipher(args.Alphabet.ToCharArray());
+            return cipher.Encode(args.Text, args.Keyword);
         }
 
-        [Route("encode"), HttpGet]
-        public string EncodeText([FromUri] string keyword, [FromUri] string text, [FromUri] string lang = en)
+        [Route("decode"), HttpPost]
+        public string DecodeText([FromBody] VigenereParams args)
         {
-            Cipher cipher = new Cipher(alphabets[lang].ToCharArray());
-            return cipher.Encode(text, keyword);
+            Cipher cipher = new Cipher(args.Alphabet.ToCharArray());
+            return cipher.Decode(args.Text, args.Keyword);
         }
 
-        [Route("decode"), HttpGet]
-        public string DecodeText([FromUri] string keyword, [FromUri] string text, [FromUri] string lang = en)
+        [Route("kasiski"), HttpPost]
+        public IEnumerable<Dictionary<string, double>> MakeKasiskiMethod([FromBody] VigenereParams args)
         {
-            Cipher cipher = new Cipher(alphabets[lang].ToCharArray());
-            return cipher.Decode(text, keyword);
-        }
-
-        [Route("kasiski"), HttpGet]
-        public IEnumerable<Dictionary<string, double>> DencodeText([FromUri] string text)
-        {
-            Kasiski kasiski = new Kasiski();
-            return kasiski.Decode(text).Select(tpl => new Dictionary<string, double>() {
+            Kasiski kasiski = new Kasiski(args.Alphabet);
+            return kasiski.Decode(args.Text).Select(tpl => new Dictionary<string, double>() {
                 { "size", tpl.Item1 },
                 { "count", tpl.Item2 },
                 { "probability", tpl.Item3}

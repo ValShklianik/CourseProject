@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace VigenereCipher
 {
    public class Kasiski
-    {
+   {
+        private string alphabet = "";
+        public Kasiski() {}
+        public Kasiski(string alphabet)
+        {
+            this.alphabet = alphabet;
+        }
+
         private Dictionary<string, List<int>> GetCoordinatesDict(string text, int len)
         {
             return Enumerable
@@ -55,13 +63,18 @@ namespace VigenereCipher
             return firstEl;
         }
 
+        private string PrepareText(string text)
+        {
+            return Regex.Replace(text.ToUpper(), "[^" + alphabet + "]", "");
+        }
+
         public IEnumerable<ValueTuple<int, int, double>> Decode(string text)
         {
             const int minWordLength = 3,
                       maxWordLength = 15;
             var divisors = Enumerable
                     .Range(minWordLength, maxWordLength - minWordLength)
-                    .SelectMany(len => GetCoordinatesDict(text.Replace(" ", ""), len).Where(pair => pair.Value.Count > 0 && pair.Value.Count(d => d == pair.Value.First()) == pair.Value.Count))
+                    .SelectMany(len => GetCoordinatesDict(PrepareText(text), len).Where(pair => pair.Value.Count > 0 && pair.Value.Count(d => d == pair.Value.First()) == pair.Value.Count))
                     .SelectMany(pair => pair.Value)
                     .Distinct()
                     .SelectMany(distance => GetDivisors(distance))

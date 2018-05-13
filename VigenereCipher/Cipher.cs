@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace VigenereCipher
 {
+    class Delimeter
+    {
+        public string Value { get; set; }
+        public int PreviousIndex { get; set; }
+        public int Index { get; set; }
+        public int Key { get; set; }
+    }
+
     public class Cipher
     {
         private int alphabetSize;
@@ -15,15 +24,48 @@ namespace VigenereCipher
             alphabetSize = characters.Length;
         }
 
+        private string RestoreDelimeters(char[] text, List<Delimeter> delimeters)
+        {
+            return string.Join("", delimeters
+                    .Select(delimeter => string.Join("", text
+                                            .Skip(delimeter.PreviousIndex - delimeter.Key)
+                                            .Take(delimeter.Index - delimeter.PreviousIndex - 1).ToArray()) + delimeter.Value));
+        }
+
+        private List<Delimeter> GetDelimeters(string text, string pattern)
+        {
+            var delimitersMatch = new Regex(pattern).Match(text);
+            List<Delimeter> delimeters = new List<Delimeter>();
+            int previousIndex = -1;
+            int count = 0;
+            while (delimitersMatch.Success)
+            {
+                delimeters.Add(new Delimeter()
+                {
+                    Value = delimitersMatch.Value,
+                    Index = delimitersMatch.Index,
+                    PreviousIndex = previousIndex,
+                    Key = count
+                });
+                count++;
+                previousIndex = delimitersMatch.Index;
+                delimitersMatch = delimitersMatch.NextMatch();
+            }
+            return delimeters;
+        }
+
         private string Code(string input, string keyword, Func<char, char, char> resultSelector)
         {
-            string inputText = Regex.Replace(input.ToUpper(), "[^" + new String(characters) + "]", "");
+            var pattern = "[^" + new String(characters).ToUpper() + "]";
+            var upperedText = input.ToUpper();
+            //var delimeters = GetDelimeters(upperedText, pattern);
+            string inputText = Regex.Replace(upperedText, pattern, "");
             int repeatCount = inputText.Length / keyword.Length + 1;
             string ciph = string.Join("", string.Join("", Enumerable.Repeat(keyword.ToUpper(), repeatCount)).Take(inputText.Length));
 
             char[] result = inputText.ToUpper().Zip(ciph, resultSelector).ToArray();
 
-            return string.Join("", result);
+            return string.Join("", result); // RestoreDelimeters(result, delimeters);
         }
 
         public string Encode(string input, string keyword)

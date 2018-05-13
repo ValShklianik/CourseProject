@@ -1,11 +1,37 @@
 ﻿<div id="app">
-    <div class="vigenere-input-data">
-        <textarea v-model="initialText"></textarea>
-        <input type="text" v-model="keyword" />
-        <input type="button" value="Шифровать" v-on:click="encode(initialText, keyword)"/>
-    </div>
-    <div class="vigenere-result">
-        {{encodedText}}
+    <div class="preloader-container" v-show="preloader">
+        <div class="sk-circle">
+            <div class="sk-circle1 sk-child"></div>
+            <div class="sk-circle2 sk-child"></div>
+            <div class="sk-circle3 sk-child"></div>
+            <div class="sk-circle4 sk-child"></div>
+            <div class="sk-circle5 sk-child"></div>
+            <div class="sk-circle6 sk-child"></div>
+            <div class="sk-circle7 sk-child"></div>
+            <div class="sk-circle8 sk-child"></div>
+            <div class="sk-circle9 sk-child"></div>
+            <div class="sk-circle10 sk-child"></div>
+            <div class="sk-circle11 sk-child"></div>
+            <div class="sk-circle12 sk-child"></div>
+        </div>
     </div>
     
+    <ul class="nav nav-tabs">
+        <li role="presentation" :class="activeMode == 'encode_mode' ? 'active' : ''">
+            <a href="#"><label for="encode_mode" v-on:click="activeMode = 'encode_mode'">Шифровать</label></a>
+            <input type="radio" name="active_mode" value="encode_mode" id="encode_mode" v-model="activeMode" style="display: none" />
+        </li>
+        <li role="presentation" :class="activeMode == 'decode_mode' ? 'active' : ''">
+            <a href="#"><label for="decode_mode" v-on:click="activeMode = 'decode_mode'">Дешифровать</label></a>
+            <input type="radio" name="active_mode" value="decode_mode" id="decode_mode" v-model="activeMode" style="display: none" />
+        </li>
+    </ul>
+    <div v-if="activeMode == 'encode_mode'" class="component-wrapper">
+        <encode></encode>
+    </div>
+    <div v-if="activeMode == 'decode_mode'" class="component-wrapper">
+        <decode :text="encodedText"></decode>
+    </div>
+
 </div>
+
