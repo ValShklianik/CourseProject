@@ -79,11 +79,11 @@ namespace VigenereCipher
                     .Distinct()
                     .SelectMany(distance => GetDivisors(distance))
                     .Where(divisor => divisor >= minWordLength && divisor <= maxWordLength);
-            var pairs = divisors
+            return divisors
                 .Select(divisor => (divisor: divisor, count: divisors.Count(d => d == divisor)))
                 .Distinct()
-                .OrderBy(tpl => -tpl.count);
-                return pairs.Select(tpl => (divisor: tpl.divisor, count: tpl.count, probability: (double)tpl.count / pairs.ToList().Count));
+                .OrderBy(tpl => -tpl.count)
+                .Select(tpl => (divisor: tpl.divisor, count: tpl.count, probability: (double)tpl.count / divisors.ToList().Count));
         }
     }
 }

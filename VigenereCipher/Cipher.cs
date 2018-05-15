@@ -26,10 +26,13 @@ namespace VigenereCipher
 
         private string RestoreDelimeters(char[] text, List<Delimeter> delimeters)
         {
-            return string.Join("", delimeters
-                    .Select(delimeter => string.Join("", text
-                                            .Skip(delimeter.PreviousIndex - delimeter.Key)
-                                            .Take(delimeter.Index - delimeter.PreviousIndex - 1).ToArray()) + delimeter.Value));
+            string result = new String(text);
+
+            foreach (var delimeter in delimeters)
+            {
+                result = result.Insert(delimeter.Index, delimeter.Value);
+            }
+            return result;
         }
 
         private List<Delimeter> GetDelimeters(string text, string pattern)
@@ -58,14 +61,14 @@ namespace VigenereCipher
         {
             var pattern = "[^" + new String(characters).ToUpper() + "]";
             var upperedText = input.ToUpper();
-            //var delimeters = GetDelimeters(upperedText, pattern);
+            var delimeters = GetDelimeters(upperedText, pattern);
             string inputText = Regex.Replace(upperedText, pattern, "");
             int repeatCount = inputText.Length / keyword.Length + 1;
             string ciph = string.Join("", string.Join("", Enumerable.Repeat(keyword.ToUpper(), repeatCount)).Take(inputText.Length));
 
             char[] result = inputText.ToUpper().Zip(ciph, resultSelector).ToArray();
 
-            return string.Join("", result); // RestoreDelimeters(result, delimeters);
+            return RestoreDelimeters(result, delimeters);
         }
 
         public string Encode(string input, string keyword)
