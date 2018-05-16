@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BLL;
 
 using VigenereCipher;
 
@@ -29,33 +30,72 @@ namespace web.Controllers
         }
     }
 
+    public class KasiskiParams
+    {
+        private const string englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string alphabet;
+        private char mostPopular;
+        public string Text { get; set; }
+        public string Alphabet
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(alphabet)) return englishAlphabet;
+                return alphabet;
+            }
+            set
+            {
+                alphabet = value;
+            }
+        }
+        public int Length { get; set; }
+        public char MostPopular
+        {
+            get
+            {
+                if (mostPopular == 0) return 'E';
+                return mostPopular;
+            }
+            set => mostPopular = value;
+        }
+    }
+
 
     [RoutePrefix("api/vigenere")]
     public class VigenereCipherController : ApiController
     {
+        private CodingTextService servie;
+        public VigenereCipherController()
+        {
+            servie = new CodingTextService();
+        }
+
         [Route("encode"), HttpPost]
         public string EncodeText([FromBody] VigenereParams args)
         {
-            Cipher cipher = new Cipher(args.Alphabet.ToCharArray());
-            return cipher.Encode(args.Text, args.Keyword);
+            return servie.EncodeText(args.Text, args.Keyword, args.Alphabet);
         }
 
         [Route("decode"), HttpPost]
         public string DecodeText([FromBody] VigenereParams args)
         {
-            Cipher cipher = new Cipher(args.Alphabet.ToCharArray());
-            return cipher.Decode(args.Text, args.Keyword);
+            return servie.DecodeText(args.Text, args.Keyword, args.Alphabet);
         }
 
         [Route("kasiski"), HttpPost]
-        public IEnumerable<Dictionary<string, double>> MakeKasiskiMethod([FromBody] VigenereParams args)
+        public IEnumerable<Dictionary<string, double>> MakeKasiskiMethod([FromBody] KasiskiParams args)
+        {
+            return servie.GetKasiskiResult(args.Text, args.Alphabet).Select(tpl => new Dictionary<string, double>() {
+                { "size", tpl.Item1 },
+                { "probability", tpl.Item2}
+            });
+        }
+
+        [Route("get_keyword"), HttpPost]
+        public string GetKeyword([FromBody] KasiskiParams args)
         {
             Kasiski kasiski = new Kasiski(args.Alphabet);
-            return kasiski.Decode(args.Text).Select(tpl => new Dictionary<string, double>() {
-                { "size", tpl.Item1 },
-                { "count", tpl.Item2 },
-                { "probability", tpl.Item3}
-            });
+            return kasiski.GetKeyword(args.Text, args.Length, args.MostPopular);
         }
     }
 }

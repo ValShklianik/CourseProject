@@ -130,8 +130,20 @@ Vue.component('decode', {
                         text: self.inputText,
                         alphabet: russianAlphabed
                     }
-                }).done(function (resp) {
+                }).then(function (resp) {
                     self.kasiskiResult = resp;
+                    let length = _.first(resp).size;
+                    return $.ajax('api/vigenere/get_keyword', {
+                        type: 'POST',
+                        data: {
+                            text: self.inputText,
+                            alphabet: russianAlphabed,
+                            length: length,
+                            mostPopular: 'О'
+                        }
+                    });
+                }).then(function (keyword) {
+                    this.keyword = keyword;
                 }).always(function () {
                     self.$parent.$emit('loading');
                 });
