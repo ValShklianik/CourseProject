@@ -5,7 +5,7 @@ namespace DAL
 {
     internal class Context : DbContext
     {
-        public Context() : base("Accounts")
+        public Context() : base("Cipher")
         {
         }
 

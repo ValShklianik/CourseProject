@@ -34,7 +34,6 @@ namespace web.Controllers
     {
         private const string englishAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private string alphabet;
-        private char mostPopular;
         public string Text { get; set; }
         public string Alphabet
         {
@@ -49,15 +48,7 @@ namespace web.Controllers
             }
         }
         public int Length { get; set; }
-        public char MostPopular
-        {
-            get
-            {
-                if (mostPopular == 0) return 'E';
-                return mostPopular;
-            }
-            set => mostPopular = value;
-        }
+        public List<double> Frequency { get; set; }
     }
 
 
@@ -91,11 +82,11 @@ namespace web.Controllers
             });
         }
 
-        [Route("get_keyword"), HttpPost]
-        public string GetKeyword([FromBody] KasiskiParams args)
+        [Route("get_keywords"), HttpPost]
+        public IEnumerable<string> GetKeyword([FromBody] KasiskiParams args)
         {
-            Kasiski kasiski = new Kasiski(args.Alphabet);
-            return kasiski.GetKeyword(args.Text, args.Length, args.MostPopular);
+            var frequencyDict = args.Alphabet.Zip(args.Frequency, (key, val) => (key: key, val: val)).ToDictionary(p => p.key, p => p.val);
+            return servie.GetKeywords(args.Text, frequencyDict, args.Length);
         }
     }
 }

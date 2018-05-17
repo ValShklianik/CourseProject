@@ -15,7 +15,7 @@
             <div class="sk-circle12 sk-child"></div>
         </div>
     </div>
-    
+
     <ul class="nav nav-tabs">
         <li role="presentation" :class="activeMode == 'encode_mode' ? 'active' : ''">
             <a href="#"><label for="encode_mode" v-on:click="activeMode = 'encode_mode'">Шифровать</label></a>
@@ -25,12 +25,19 @@
             <a href="#"><label for="decode_mode" v-on:click="activeMode = 'decode_mode'">Дешифровать</label></a>
             <input type="radio" name="active_mode" value="decode_mode" id="decode_mode" v-model="activeMode" style="display: none" />
         </li>
+        <li role="presentation" :class="activeMode == 'hack_mode' ? 'active' : ''">
+            <a href="#"><label for="hack_mode" v-on:click="activeMode = 'hack_mode'">Взломать</label></a>
+            <input type="radio" name="active_mode" value="hack_mode" id="decode_mode" v-model="activeMode" style="display: none" />
+        </li>
     </ul>
     <div v-if="activeMode == 'encode_mode'" class="component-wrapper">
-        <encode></encode>
+        <encode :lang="lang"></encode>
     </div>
     <div v-if="activeMode == 'decode_mode'" class="component-wrapper">
-        <decode :text="encodedText"></decode>
+        <decode :text="encodedText" :lang="lang"></decode>
+    </div>
+    <div v-if="activeMode == 'hack_mode'" class="component-wrapper">
+        <hack :text="encodedText" :lang="lang"></hack>
     </div>
 
 </div>

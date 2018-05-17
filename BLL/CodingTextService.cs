@@ -31,7 +31,7 @@ namespace BLL
             {
                 var cipher = new Cipher(alphabet.ToCharArray());
                 var encoded = cipher.Decode(text, keyword);
-                result = repository.GetDecodedText(encoded, keyword);
+                result = repository.AddDecodedText(encoded, text, keyword);
             }
             return result.Value;
         }
@@ -47,7 +47,13 @@ namespace BLL
                 var res = kasiski.Decode(encodedText);
                 result = repository.AddKasiskiResult(encodedText, res);
             }
-            return result.Results.Select(item => (item.Size, item.Probability));
+            return result.Select(item => (item.Size, item.Probability));
+        }
+
+        public IEnumerable<string> GetKeywords(string encodedText, Dictionary<char, double> frequencyDictionary, int length)
+        {
+            var ga = new GeneticAlgorithm(frequencyDictionary, length, encodedText);
+            return ga.GetKeywords();
         }
     }
 }

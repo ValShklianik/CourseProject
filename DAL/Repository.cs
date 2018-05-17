@@ -11,7 +11,7 @@ namespace DAL
         {
             using (var db = new Context())
             {
-                Text text = db.Texts.First(t => t.Value == initText);
+                Text text = db.Texts.FirstOrDefault(t => t.Value == initText);
                 if (ReferenceEquals(text, null)) text = db.Texts.Add(new Text()
                 {
                     Value = initText
@@ -29,14 +29,30 @@ namespace DAL
             }
         }
 
-        public EncodedText GetEncodedText(string text, string keyword)
+        public EncodedText GetEncodedText(string initText, string keyword)
         {
             using (var db = new Context())
             {
-                EncodedText encoded = db.EncodedTexts.First(t => t.InitialText.Value == text && t.Keyword == keyword);
-
-                if (ReferenceEquals(encoded, null)) return null;
+                EncodedText encoded = db.EncodedTexts.FirstOrDefault(t => t.InitialText.Value == initText && t.Keyword == keyword);
                 return encoded;
+            }
+        }
+
+        public Text AddDecodedText(string initText, string decodedText, string keyword)
+        {
+            using (var db = new Context())
+            {
+                Text text = db.Texts.FirstOrDefault(t => t.Value == initText);
+                if (ReferenceEquals(text, null)) text = db.Texts.Create();
+                text.Value = initText;
+                db.SaveChanges();
+                EncodedText encoded = db.EncodedTexts.FirstOrDefault(t => t.Value == initText && t.Keyword == keyword);
+                if (ReferenceEquals(encoded, null)) encoded = db.EncodedTexts.Create();
+                encoded.InitialTextId = text.Id;
+                encoded.InitialText = text;
+                encoded.Keyword = keyword;
+                encoded.Value = decodedText;
+                return encoded.InitialText;
             }
         }
 
@@ -44,18 +60,18 @@ namespace DAL
         {
             using (var db = new Context())
             {
-                EncodedText encoded = db.EncodedTexts.First(text => text.Value == encodedText && text.Keyword == keyword);
+                EncodedText encoded = db.EncodedTexts.FirstOrDefault(text => text.Value == encodedText && text.Keyword == keyword);
 
                 if (ReferenceEquals(encoded, null)) return null;
                 return encoded.InitialText;
             }
         }
 
-        public KasiskiResult AddKasiskiResult(string text, IEnumerable<Tuple<int, double>> results)
+        public IEnumerable<KasiskiResultItem> AddKasiskiResult(string text, IEnumerable<Tuple<int, double>> results)
         {
             using (var db = new Context())
             {
-                EncodedText encoded = db.EncodedTexts.First(t => t.Value == text);
+                EncodedText encoded = db.EncodedTexts.FirstOrDefault(t => t.Value == text);
                 if (ReferenceEquals(encoded, null)) encoded = db.EncodedTexts.Add(new EncodedText()
                 {
                     Value = text
@@ -66,20 +82,33 @@ namespace DAL
                     EncodedTextField = encoded
                 });
                 db.SaveChanges();
-                result.Results = results.Select(res => db.KasiskiResultItems.Add(new KasiskiResultItem() {
-                    Size = res.Item1,
-                    Probability = res.Item2
-                }));
+                var items = new List<KasiskiResultItem>();
+                foreach (var res in results)
+                {
+                    var r = db.KasiskiResultItems.Add(new KasiskiResultItem()
+                    {
+                        Size = res.Item1,
+                        Probability = res.Item2,
+                        KasiskiResultField = result,
+                        KasiskiResultId = result.Id
+                    });
+                    db.SaveChanges();
+                    items.Add(r);
+                }
+                result.Results = items;
                 db.SaveChanges();
-                return result;
+                return items;
             }
         }
 
-        public KasiskiResult GetKasiskiResult(string text)
+        public IEnumerable<KasiskiResultItem> GetKasiskiResult(string text)
         {
             using (var db = new Context())
             {
-                return db.KasiskiResults.First(res => res.EncodedTextField.Value == text);
+                var result = db.KasiskiResultItems.Where(res => res.KasiskiResultField.EncodedTextField.Value == text);
+                if (ReferenceEquals(result, null)) return null;
+                if (result.Count(r => true) == 0) return null;
+                return result.ToList();
             }
         }
     }
